@@ -1,0 +1,27 @@
+digraph AgriTrackERD {
+  graph [rankdir=LR, bgcolor="white", pad="0.25", nodesep="0.55", ranksep="0.8", fontname="Arial", label="AgriTrack Entity Relationship Diagram", labelloc=t, fontsize=20];
+  node [shape=record, style="rounded,filled", fillcolor="#EAF4ED", color="#176B45", fontname="Arial", fontsize=10];
+  edge [color="#547564", fontname="Arial", fontsize=9, arrowsize=0.8];
+  roles [label="{ROLES|PK role_id\lrole_name UNIQUE\ldescription\l}"];
+  users [label="{USERS|PK user_id\lFK role_id\lfull_name\lemail UNIQUE\lpassword_hash\l}"];
+  farms [label="{FARMS|PK farm_id\lFK owner_id\lfarm_name\llocation\lland_area_acres\l}"];
+  crops [label="{CROPS|PK crop_id\lFK farm_id\lcrop_name\lvariety\lseason\lexpected_yield_kg\l}"];
+  harvests [label="{HARVESTS|PK harvest_id\lFK farm_id\lFK crop_id\lharvest_date\lquantity_kg\lquality_grade\l}"];
+  suppliers [label="{SUPPLIERS|PK supplier_id\lsupplier_name UNIQUE\lcontact_person\lemail\lphone\lcity\l}"];
+  warehouses [label="{WAREHOUSES|PK warehouse_id\lwarehouse_name\llocation\lcapacity_kg\l}"];
+  inventory [label="{INVENTORY|PK inventory_id\lFK crop_id\lFK warehouse_id\lquantity_kg\lunit_price\lreorder_level_kg\lUNIQUE crop_id + warehouse_id\l}"];
+  orders [label="{ORDERS|PK order_id\lFK buyer_id\lorder_date\lstatus\ltotal_amount\ldelivery_address\l}"];
+  order_items [label="{ORDER_ITEMS|PK order_item_id\lFK order_id\lFK inventory_id\lquantity_kg\lunit_price\lline_total GENERATED\l}"];
+  deliveries [label="{DELIVERIES|PK delivery_id\lFK order_id UNIQUE\ltracking_code UNIQUE\ldelivery_status\l}"];
+  roles -> users [label="1 : M"];
+  users -> farms [label="1 : M"];
+  farms -> crops [label="1 : M"];
+  farms -> harvests [label="1 : M"];
+  crops -> harvests [label="1 : M"];
+  crops -> inventory [label="1 : M"];
+  warehouses -> inventory [label="1 : M"];
+  users -> orders [label="1 : M"];
+  orders -> order_items [label="1 : M"];
+  inventory -> order_items [label="1 : M"];
+  orders -> deliveries [label="1 : 0..1"];
+}
